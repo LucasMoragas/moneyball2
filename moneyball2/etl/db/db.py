@@ -17,7 +17,7 @@ def connect_firestore():
         Exception: For any other errors.
     """
     credentials_path = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), '..', '..', 'moneyball2-751e9-4c8364afe548.json')
+        os.path.join(os.path.dirname(__file__), '..', '..', '..','moneyball2-751e9-4c8364afe548.json')
     )
 
     if not os.path.isfile(credentials_path):

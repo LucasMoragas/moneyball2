@@ -1,5 +1,6 @@
 import os
 import sys
+from http import HTTPStatus
 from typing import Any, Dict, Optional
 
 import requests
@@ -7,7 +8,6 @@ from dotenv import load_dotenv
 
 load_dotenv('./.env')
 API_KEY = os.getenv('X_APISPORTS_KEY')
-HTTP_OK = int(os.getenv('HTTP_OK', '200'))
 
 if not API_KEY:
     print('Erro: variável de ambiente X_APISPORTS_KEY não definida.')
@@ -33,10 +33,12 @@ def get_teams_by_league(league_id: int, season: int) -> Optional[Dict[str, Any]]
     headers = {'x-rapidapi-host': 'v3.football.api-sports.io', 'x-rapidapi-key': API_KEY}
     try:
         response = requests.get(url, headers=headers, timeout=10)
-        response.raise_for_status()
-        return response.json()
-    except requests.HTTPError as http_err:
-        print(f'HTTP error occurred: {http_err} - {response.text}')
+        if response.status_code == HTTPStatus.OK:
+            return response.json()
+        else:
+            print(
+                f'HTTP error occurred: {response.status_code} - {response.reason} - {response.text}'
+            )
     except requests.RequestException as req_err:
         print(f'Request error occurred: {req_err}')
     except Exception as err:
@@ -60,10 +62,12 @@ def get_team_statistics(league_id: int, season: int, team_id: int) -> Optional[D
     headers = {'x-rapidapi-host': 'v3.football.api-sports.io', 'x-rapidapi-key': API_KEY}
     try:
         response = requests.get(url, headers=headers, timeout=10)
-        response.raise_for_status()
-        return response.json()
-    except requests.HTTPError as http_err:
-        print(f'HTTP error occurred: {http_err} - {response.text}')
+        if response.status_code == HTTPStatus.OK:
+            return response.json()
+        else:
+            print(
+                f'HTTP error occurred: {response.status_code} - {response.reason} - {response.text}'
+            )
     except requests.RequestException as req_err:
         print(f'Request error occurred: {req_err}')
     except Exception as err:
